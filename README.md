@@ -1,16 +1,27 @@
-# restaurantmobileapp
+# Restaurant Mobile App 🍔
 
-A new Flutter project.
+A simple Flutter restaurant app with Firebase Authentication and Cart functionality.
+
+## Features
+- Login with email & password (Firebase Auth)
+- Menu page with food items (static data)
+- Add to cart & view total price
+- Clean navigation & modern UI
+- Well-structured codebase
+
+## Bonus
+- GitHub Actions CI for build/test
+- Beautiful UI with Google Fonts
+- Register & Forgot Password pages
 
 ## Getting Started
+1. Clone the repo
+2. Run `flutter pub get`
+3. Add your Firebase config files
+4. Run `flutter run`
 
-This project is a starting point for a Flutter application.
+## Screenshots
+(ضع صور من التطبيق هنا)
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## License
+MIT

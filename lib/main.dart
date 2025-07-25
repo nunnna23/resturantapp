@@ -9,6 +9,8 @@ import 'package:restaurantmobileapp/screens/cartscreen.dart';
 import 'package:restaurantmobileapp/screens/loginscreen.dart';
 import 'package:restaurantmobileapp/screens/menuscreen.dart';
 import 'package:restaurantmobileapp/screens/splash_screen.dart';
+import 'package:restaurantmobileapp/screens/onboarding_screen.dart';
+import 'package:restaurantmobileapp/screens/register_screen.dart';
 
 import 'firebase_options.dart'; // استيراد ملف الإعدادات
 
@@ -36,9 +38,11 @@ class MyApp extends StatelessWidget {
         initialRoute: '/splash',
         routes: {
           '/splash': (_) => const SplashScreen(),
+          '/onboarding': (_) => const OnboardingScreen(),
           '/login': (_) => const LoginScreen(),
           '/menu': (_) => const MenuScreen(),
           '/cart': (_) => const CartScreen(),
+          '/register': (_) => const RegisterScreen(),
         },
       ),
     );

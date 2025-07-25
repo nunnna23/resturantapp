@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  String email = '', password = '';
+  String email = '', password = '', username = '';
   bool loading = false;
   String? error;
+  bool agree = false;
   bool obscure = true;
 
-  void login() async {
-    if (_formKey.currentState!.validate()) {
+  void register() async {
+    if (_formKey.currentState!.validate() && agree) {
       setState(() {
         loading = true;
         error = null;
       });
       try {
-        final user = await AuthService().signIn(email, password);
-        if (user != null) {
-          Navigator.pushReplacementNamed(context, '/menu');
-        }
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        // يمكنك حفظ اسم المستخدم في Firestore لاحقًا إذا أردت
+        Navigator.pushReplacementNamed(context, '/menu');
       } catch (e) {
         setState(() {
-          error = 'Login failed. Check your credentials.';
+          error = 'Registration failed. Try another email.';
         });
       }
       setState(() {
@@ -50,10 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // العنوان الرئيسي
                   const SizedBox(height: 32),
                   const Text(
-                    'Login to your account.',
+                    'Create your new account',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -62,11 +63,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Please sign in to your account',
+                    'Create an account to start looking for the food you like',
                     style: TextStyle(fontSize: 15, color: Colors.black54),
                   ),
                   const SizedBox(height: 32),
-                  // حقل الإيميل
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Email Address',
@@ -84,8 +84,24 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? 'Enter a valid email'
                         : null,
                   ),
-                  const SizedBox(height: 18),
-                  // حقل الباسورد
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'User Name',
+                      hintText: 'Enter your name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 18,
+                      ),
+                    ),
+                    onChanged: (v) => username = v,
+                    validator: (v) =>
+                        v == null || v.length < 2 ? 'Enter a valid name' : null,
+                  ),
+                  const SizedBox(height: 16),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Password',
@@ -110,22 +126,33 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? 'Password min 6 chars'
                         : null,
                   ),
-                  const SizedBox(height: 8),
-                  // Forgot password
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Forgot password?',
-                        style: TextStyle(
-                          color: Colors.orange,
-                          fontWeight: FontWeight.w500,
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: agree,
+                        activeColor: Colors.orange,
+                        onChanged: (v) => setState(() => agree = v ?? false),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
                         ),
                       ),
-                    ),
+                      const Expanded(
+                        child: Text(
+                          'I Agree with Terms of Service and Privacy Policy',
+                          style: TextStyle(fontSize: 13, color: Colors.black87),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
+                  if (!agree)
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8, bottom: 4),
+                      child: Text(
+                        'You must agree to continue',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
                   if (error != null)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
@@ -134,7 +161,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: const TextStyle(color: Colors.red),
                       ),
                     ),
-                  // زر تسجيل الدخول
                   SizedBox(
                     width: double.infinity,
                     height: 52,
@@ -149,14 +175,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onPressed: loading ? null : login,
+                      onPressed: loading ? null : register,
                       child: loading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text('Sign In'),
+                          : const Text('Register'),
                     ),
                   ),
                   const SizedBox(height: 18),
-                  // أو سجل بواسطة
                   Row(
                     children: [
                       const Expanded(child: Divider(thickness: 1)),
@@ -171,35 +196,30 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  // أيقونات السوشيال
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _socialIcon(FontAwesomeIcons.google, color: Colors.red),
+                      _socialIcon(Icons.g_mobiledata, color: Colors.red),
                       const SizedBox(width: 18),
-                      _socialIcon(
-                        FontAwesomeIcons.facebook,
-                        color: Colors.blue,
-                      ),
+                      _socialIcon(Icons.facebook, color: Colors.blue),
                       const SizedBox(width: 18),
-                      _socialIcon(FontAwesomeIcons.apple, color: Colors.black),
+                      _socialIcon(Icons.apple, color: Colors.black),
                     ],
                   ),
                   const SizedBox(height: 24),
-                  // رابط التسجيل
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        "Don't have an account? ",
+                        'Already have an account? ',
                         style: TextStyle(color: Colors.black87),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushReplacementNamed(context, '/register');
+                          Navigator.pushReplacementNamed(context, '/login');
                         },
                         child: const Text(
-                          'Register',
+                          'Sign In',
                           style: TextStyle(
                             color: Colors.orange,
                             fontWeight: FontWeight.bold,
@@ -221,7 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _socialIcon(IconData icon, {Color? color, VoidCallback? onTap}) {
     return IconButton(
       onPressed: onTap ?? () {},
-      icon: FaIcon(icon, size: 32, color: color ?? Colors.black),
+      icon: Icon(icon, size: 32, color: color ?? Colors.black),
       splashRadius: 22,
       padding: EdgeInsets.zero,
       constraints: const BoxConstraints(),
