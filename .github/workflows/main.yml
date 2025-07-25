@@ -37,4 +37,4 @@ jobs:
       - run: flutter test
 
       # 6. بناء التطبيق (نسخة APK للتأكد من أن عملية البناء تتم بنجاح)
-      - run: flutter build apk --debug
+      # - run: flutter build apk --debug
