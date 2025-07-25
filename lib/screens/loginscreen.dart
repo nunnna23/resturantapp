@@ -257,6 +257,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (user != null) {
           // ✅  ***  الإصلاح هنا  ***
           if (!context.mounted) return;
+          // ignore: use_build_context_synchronously
           Navigator.pushReplacementNamed(context, '/menu');
         }
       } catch (e) {

@@ -288,6 +288,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (!context.mounted) return;
 
         // Navigate to the menu screen on success
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/menu');
       } catch (e) {
         // If an error occurs, update the UI to show the error
