@@ -1,0 +1,40 @@
+# اسم الـ Workflow الذي سيظهر في تبويب Actions
+name: Flutter CI
+
+# متى يتم تشغيل هذا الـ Workflow؟
+on:
+  # يتم التشغيل عند رفع كود (push) إلى الفرع الرئيسي main
+  push:
+    branches: [ "main" ]
+  # يتم التشغيل أيضاً عند فتح Pull Request على الفرع الرئيسي main
+  pull_request:
+    branches: [ "main" ]
+
+# المهام (Jobs) التي سيتم تنفيذها
+jobs:
+  # اسم المهمة (يمكنك تسميتها أي شيء)
+  build:
+    # سيتم تشغيل هذه المهمة على جهاز افتراضي بنظام تشغيل أوبنتو
+    runs-on: ubuntu-latest
+
+    # الخطوات (Steps) التي ستنفذ بالترتيب
+    steps:
+      # 1. تحميل نسخة من الكود الخاص بك إلى الجهاز الافتراضي
+      - uses: actions/checkout@v3
+
+      # 2. تجهيز بيئة فلاتر Flutter
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable' # يمكنك اختيار القناة (stable, beta, dev)
+
+      # 3. تحميل الاعتماديات (Packages) من ملف pubspec.yaml
+      - run: flutter pub get
+
+      # 4. (اختياري ولكن موصى به بشدة) تحليل الكود للتأكد من عدم وجود أخطاء أو تحذيرات
+      - run: flutter analyze
+
+      # 5. (اختياري) تشغيل الاختبارات الآلية (Unit & Widget Tests)
+      - run: flutter test
+
+      # 6. بناء التطبيق (نسخة APK للتأكد من أن عملية البناء تتم بنجاح)
+      - run: flutter build apk --debug
