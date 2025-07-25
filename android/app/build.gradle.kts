@@ -27,7 +27,11 @@ android {
         applicationId = "com.example.restaurantmobileapp"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        
+        // ✅  ***  التعديل الوحيد المطلوب هنا  ***
+        // قمنا بتغيير flutter.minSdkVersion إلى 23 مباشرةً
+        minSdk = 23
+        
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

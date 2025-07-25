@@ -418,7 +418,7 @@ class MenuScreen extends StatelessWidget {
               itemBuilder: (context, i) => FoodGridItem(item: foods[i]),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
         ],
       ),
     );
